@@ -24967,7 +24967,7 @@ const MainView = ()=>{
             id: 1,
             title: "Inception",
             description: "A thief who steals corporate secrets through dream-sharing technology.",
-            image: "https://tinyurl.com/2f3nkz8m",
+            image: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
             genre: "Sci-Fi",
             director: "Christopher Nolan"
         },
@@ -24975,15 +24975,15 @@ const MainView = ()=>{
             id: 2,
             title: "The Matrix",
             description: "A hacker discovers the reality he lives in is a simulation.",
-            image: "https://m.media-amazon.com/images/I/51EG732BV3L._AC_.jpg",
+            image: "https://image.tmdb.org/t/p/w500/aOIuZAjPaRIE7Fp3YkFoM9UoOEb.jpg",
             genre: "Action",
-            director: "Lana & Lilly Wachowski"
+            director: "Lana Wachowski, Lilly Wachowski"
         },
         {
             id: 3,
             title: "Interstellar",
-            description: "A team travels through a wormhole in search of a new home for humanity.",
-            image: "https://img.moviepostershop.com/interstellar-movie-poster-2014-1020771202.jpg",
+            description: "A team of explorers travel through a wormhole in space.",
+            image: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
             genre: "Adventure",
             director: "Christopher Nolan"
         }
@@ -25012,7 +25012,7 @@ const MainView = ()=>{
         columnNumber: 9
     }, undefined);
 };
-_s(MainView, "DA4yqsHCvr2HgEdonAEpnknwwvM=");
+_s(MainView, "rsuGdalck15PSFiZOq+u4n3dCfw=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
@@ -25036,22 +25036,18 @@ parcelHelpers.export(exports, "MovieCard", ()=>MovieCard);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 const MovieCard = ({ movie, onMovieClick })=>{
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        onClick: ()=>{
-            onMovieClick(movie);
-        },
+        onClick: ()=>onMovieClick(movie),
         style: {
             cursor: "pointer",
+            marginBottom: "10px",
             border: "1px solid #ccc",
-            padding: "10px",
-            margin: "10px",
-            borderRadius: "5px",
-            backgroundColor: "#f9f9f9"
+            padding: "10px"
         },
         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
             children: movie.title
         }, void 0, false, {
             fileName: "src/Components/movie-card/movie-card.jsx",
-            lineNumber: 16,
+            lineNumber: 7,
             columnNumber: 13
         }, undefined)
     }, void 0, false, {
@@ -27393,16 +27389,14 @@ const MovieView = ({ movie, onBackClick })=>{
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: {
             padding: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "5px"
+            border: "1px solid #ccc"
         },
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
                 src: movie.image,
                 alt: movie.title,
                 style: {
-                    width: "200px",
-                    marginBottom: "10px"
+                    width: "200px"
                 }
             }, void 0, false, {
                 fileName: "src/Components/movie-view/movie-view.jsx",
@@ -27469,9 +27463,6 @@ const MovieView = ({ movie, onBackClick })=>{
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                 onClick: onBackClick,
-                style: {
-                    marginTop: "10px"
-                },
                 children: "Back"
             }, void 0, false, {
                 fileName: "src/Components/movie-view/movie-view.jsx",
