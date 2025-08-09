@@ -8,7 +8,7 @@ export const MainView = () => {
             id: 1,
             title: "Inception",
             description: "A thief who steals corporate secrets through dream-sharing technology.",
-            image: "https://tinyurl.com/2f3nkz8m",
+            image: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
             genre: "Sci-Fi",
             director: "Christopher Nolan"
         },
@@ -16,15 +16,15 @@ export const MainView = () => {
             id: 2,
             title: "The Matrix",
             description: "A hacker discovers the reality he lives in is a simulation.",
-            image: "https://m.media-amazon.com/images/I/51EG732BV3L._AC_.jpg",
+            image: "https://image.tmdb.org/t/p/w500/aOIuZAjPaRIE7Fp3YkFoM9UoOEb.jpg",
             genre: "Action",
-            director: "Lana & Lilly Wachowski"
+            director: "Lana Wachowski, Lilly Wachowski"
         },
         {
             id: 3,
             title: "Interstellar",
-            description: "A team travels through a wormhole in search of a new home for humanity.",
-            image: "https://img.moviepostershop.com/interstellar-movie-poster-2014-1020771202.jpg",
+            description: "A team of explorers travel through a wormhole in space.",
+            image: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
             genre: "Adventure",
             director: "Christopher Nolan"
         }
