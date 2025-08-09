@@ -1,0 +1,17 @@
+{
+    "name": "myflix-client-mf",
+    "version": "1.0.0",
+    "description": "React frontend for myFlix app",
+    "scripts": {
+        "start": "parcel src/index.html --open",
+        "build": "parcel build src/index.html"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@parcel/transformer-sass": "^2.15.4",
+        "parcel": "^2.9.3"
+    }
+}
