@@ -7,7 +7,7 @@ export const MainView = () => {
     const [selectedMovie, setSelectedMovie] = useState(null);
 
     useEffect(() => {
-        fetch("https://your-heroku-api.herokuapp.com/movies") // Replace with your actual Heroku API URL
+        fetch("https://myflix-clent-mf-262f90a8a164.herokuapp.com/movies")
             .then((response) => response.json())
             .then((data) => {
                 setMovies(data);
