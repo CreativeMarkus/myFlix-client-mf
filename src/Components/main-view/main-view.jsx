@@ -1,27 +1,24 @@
-import { useState, useEffect } from "react";
-import { MovieCard } from "../movie-card/movie-card";
-import { MovieView } from "../movie-view/movie-view";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { MovieCard } from '../MovieCard/MovieCard';
 
-export const MainView = () => {
+export const MainView = ({ onMovieClick }) => {
     const [movies, setMovies] = useState([]);
-    const [selectedMovie, setSelectedMovie] = useState(null);
 
     useEffect(() => {
-        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies")
-            .then((response) => response.json())
-            .then((data) => {
-                setMovies(data);
+        fetch('https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch movies');
+                }
+                return response.json();
             })
-            .catch((error) => console.error("Error fetching movies:", error));
+            .then((data) => setMovies(data))
+            .catch((error) => console.error('Error fetching movies:', error));
     }, []);
 
-    if (selectedMovie) {
-        return (
-            <MovieView
-                movie={selectedMovie}
-                onBackClick={() => setSelectedMovie(null)}
-            />
-        );
+    if (movies.length === 0) {
+        return <div>The list is empty!</div>;
     }
 
     return (
@@ -30,9 +27,13 @@ export const MainView = () => {
                 <MovieCard
                     key={movie._id}
                     movie={movie}
-                    onMovieClick={(movie) => setSelectedMovie(movie)}
+                    onMovieClick={onMovieClick}
                 />
             ))}
         </div>
     );
+};
+
+MainView.propTypes = {
+    onMovieClick: PropTypes.func.isRequired
 };
