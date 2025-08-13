@@ -1,40 +1,80 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
 
-export default function SignupView() {
-    const navigate = useNavigate();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+export const SignupView = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [birthday, setBirthday] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        fetch('https://movieapi1-40cbbcb4b0ea.herokuapp.com/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Username: username, Password: password, Email: email })
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        const data = { Username: username, Password: password, Email: email, Birthday: birthday };
+
+        // Replace SIGNUP_URL with your backend endpoint
+        fetch("http://localhost:8080/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
         })
-            .then((res) => {
-                if (res.ok) {
-                    alert('Signup successful! Please log in.');
-                    navigate('/login');
+            .then((response) => {
+                if (response.ok) {
+                    alert("Signup successful! You can now log in.");
+                    setUsername("");
+                    setPassword("");
+                    setEmail("");
+                    setBirthday("");
                 } else {
-                    alert('Signup failed');
+                    alert("Signup failed. Please check your input or try again.");
                 }
             })
-            .catch((err) => console.error(err));
+            .catch((error) => {
+                console.error("Error during signup:", error);
+                alert("Signup failed due to a network error.");
+            });
     };
 
     return (
-        <div>
-            <h2>Signup</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <button type="submit">Signup</button>
-            </form>
-            <p>Already have an account? <Link to="/login">Log in</Link></p>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <label>
+                Username:
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    minLength="3"
+                />
+            </label>
+            <label>
+                Password:
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength="6"
+                />
+            </label>
+            <label>
+                Email:
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+            </label>
+            <label>
+                Birthday:
+                <input
+                    type="date"
+                    value={birthday}
+                    onChange={(e) => setBirthday(e.target.value)}
+                    required
+                />
+            </label>
+            <button type="submit">Sign Up</button>
+        </form>
     );
-}
+};

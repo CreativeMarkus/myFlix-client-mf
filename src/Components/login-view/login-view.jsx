@@ -7,61 +7,56 @@ export const LoginView = ({ onLoggedIn }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        const data = { Username: username, Password: password };
+
         fetch("http://localhost:8080/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            credentials: "include", // important for CORS + cookies
-            body: JSON.stringify({ Username: username, Password: password })
+            body: JSON.stringify(data)
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Login failed");
-                }
+                if (!response.ok) throw new Error("Login failed");
                 return response.json();
             })
             .then((data) => {
-                // Assuming your API returns a token and user info
-                if (data.token) {
-                    localStorage.setItem("token", data.token);
+                if (data.user && data.token) {
+                    // store in localStorage
                     localStorage.setItem("user", JSON.stringify(data.user));
-                    onLoggedIn(data.user);
+                    localStorage.setItem("token", data.token);
+
+                    // pass back to MainView
+                    onLoggedIn(data.user, data.token);
                 } else {
-                    alert("Invalid login response from server");
+                    alert("Invalid username or password");
                 }
             })
             .catch((error) => {
                 console.error(error);
-                alert("Login failed (network or server error)");
+                alert("Login failed (network/server error)");
             });
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <div>
-                <label>
-                    Username:
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </label>
-            </div>
-
-            <div>
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </label>
-            </div>
-
-            <button type="submit">Login</button>
+            <label>
+                Username:
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+            </label>
+            <label>
+                Password:
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </label>
+            <button type="submit">Submit</button>
         </form>
     );
 };
