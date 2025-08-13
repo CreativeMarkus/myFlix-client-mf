@@ -1,23 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-export const MovieCard = ({ movie, onMovieClick }) => {
+export const MovieCard = ({ movie }) => {
   return (
-    <div onClick={() => onMovieClick(movie)} style={{ border: '1px solid #ccc', padding: '10px', margin: '10px' }}>
-      <h2>{movie.Title}</h2>
-      {movie.ImagePath && (
-        <img src={movie.ImagePath} alt={movie.Title} style={{ width: '200px' }} />
-      )}
-      <p>{movie.Description}</p>
+    <div style={{ border: '1px solid #ccc', margin: 10, padding: 10, width: 200 }}>
+      <img src={movie.ImagePath} alt={movie.Title} style={{ width: '100%' }} />
+      <h3>{movie.Title}</h3>
+      <p>{movie.Description.substring(0, 100)}...</p>
+      <Link to={`/movies/${movie._id}`}>View Details</Link>
     </div>
   );
 };
 
 MovieCard.propTypes = {
   movie: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     Title: PropTypes.string.isRequired,
-    ImagePath: PropTypes.string.isRequired,
-    Description: PropTypes.string
-  }).isRequired,
-  onMovieClick: PropTypes.func.isRequired
+    Description: PropTypes.string.isRequired,
+    ImagePath: PropTypes.string
+  }).isRequired
 };

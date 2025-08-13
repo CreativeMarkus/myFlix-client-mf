@@ -1,31 +1,27 @@
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 
-export const MovieView = ({ movie, onBackClick }) => {
+export default function MovieView({ token }) {
+    const { movieId } = useParams();
+    const [movie, setMovie] = useState(null);
+
+    useEffect(() => {
+        fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies/${movieId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(data => setMovie(data))
+            .catch(err => console.error(err));
+    }, [movieId, token]);
+
+    if (!movie) return <p>Loading movie...</p>;
+
     return (
         <div>
-            <h1>{movie.Title}</h1>
-            <img src={movie.ImagePath} alt={movie.Title} />
+            <img src={movie.ImagePath} alt={movie.Title} style={{ width: '300px' }} />
+            <h2>{movie.Title}</h2>
             <p>{movie.Description}</p>
-            <p><strong>Genre:</strong> {movie.Genre?.Name}</p>
-            <p><strong>Director:</strong> {movie.Director?.Name}</p>
-            <button onClick={onBackClick}>Back</button>
+            <Link to="/">Back to Movies</Link>
         </div>
     );
-};
-
-MovieView.propTypes = {
-    movie: PropTypes.shape({
-        Title: PropTypes.string.isRequired,
-        Description: PropTypes.string,
-        ImagePath: PropTypes.string.isRequired,
-        Genre: PropTypes.shape({
-            Name: PropTypes.string,
-            Description: PropTypes.string
-        }),
-        Director: PropTypes.shape({
-            Name: PropTypes.string,
-            Bio: PropTypes.string
-        })
-    }).isRequired,
-    onBackClick: PropTypes.func.isRequired
-};
+}
