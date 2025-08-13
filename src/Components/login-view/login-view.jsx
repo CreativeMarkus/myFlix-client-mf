@@ -1,37 +1,67 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
 
-export default function LoginView({ onLoggedIn }) {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+export const LoginView = ({ onLoggedIn }) => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        fetch('https://movieapi1-40cbbcb4b0ea.herokuapp.com/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        fetch("http://localhost:8080/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include", // important for CORS + cookies
             body: JSON.stringify({ Username: username, Password: password })
         })
-            .then((res) => res.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Login failed");
+                }
+                return response.json();
+            })
             .then((data) => {
-                if (data.user && data.token) {
-                    onLoggedIn(data.user, data.token);
+                // Assuming your API returns a token and user info
+                if (data.token) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    onLoggedIn(data.user);
                 } else {
-                    alert('Login failed');
+                    alert("Invalid login response from server");
                 }
             })
-            .catch((err) => console.error(err));
+            .catch((error) => {
+                console.error(error);
+                alert("Login failed (network or server error)");
+            });
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <button type="submit">Login</button>
-            </form>
-            <p>No account? <Link to="/signup">Sign up</Link></p>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>
+                    Username:
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    Password:
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </label>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
     );
-}
+};

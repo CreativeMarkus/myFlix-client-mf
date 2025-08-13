@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { MovieCard } from '../movie-card/movie-card';
+import { LoginView } from '../login-view/login-view';
 import PropTypes from 'prop-types';
 
-export default function MainView({ token }) {
+export default function MainView() {
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
+        if (!token) return;
+
         fetch('https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies', {
             headers: { Authorization: `Bearer ${token}` }
         })
@@ -13,6 +18,18 @@ export default function MainView({ token }) {
             .then((data) => setMovies(data))
             .catch((err) => console.error(err));
     }, [token]);
+
+    // Show login if not logged in
+    if (!user) {
+        return (
+            <LoginView
+                onLoggedIn={(user, token) => {
+                    setUser(user);
+                    setToken(token);
+                }}
+            />
+        );
+    }
 
     return (
         <div>
@@ -27,5 +44,5 @@ export default function MainView({ token }) {
 }
 
 MainView.propTypes = {
-    token: PropTypes.string.isRequired
+    token: PropTypes.string
 };
