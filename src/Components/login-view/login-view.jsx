@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const LoginView = ({ onLoggedIn }) => {
+const LoginView = ({ onLoggedIn }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -12,27 +12,21 @@ export const LoginView = ({ onLoggedIn }) => {
         fetch("http://localhost:8080/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         })
-            .then((response) => {
-                if (!response.ok) throw new Error("Login failed");
-                return response.json();
-            })
+            .then((response) => response.json())
             .then((data) => {
                 if (data.user && data.token) {
-                    // store in localStorage
                     localStorage.setItem("user", JSON.stringify(data.user));
                     localStorage.setItem("token", data.token);
-
-                    // pass back to MainView
                     onLoggedIn(data.user, data.token);
                 } else {
-                    alert("Invalid username or password");
+                    alert("Invalid login credentials");
                 }
             })
             .catch((error) => {
-                console.error(error);
-                alert("Login failed (network/server error)");
+                console.error("Login error:", error);
+                alert("Login failed due to network/server error");
             });
     };
 
@@ -56,7 +50,9 @@ export const LoginView = ({ onLoggedIn }) => {
                     required
                 />
             </label>
-            <button type="submit">Submit</button>
+            <button type="submit">Login</button>
         </form>
     );
 };
+
+export default LoginView;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
-import { LoginView } from "../login-view/login-view";
-import { SignupView } from "../signup-view/signup-view";
+import LoginView from "../login-view/login-view";
+import SignupView from "../signup-view/signup-view";
 
 export default function MainView() {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -38,7 +38,6 @@ export default function MainView() {
             </>
         );
     }
-
 
     return (
         <div>

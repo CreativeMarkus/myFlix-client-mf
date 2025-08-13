@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const SignupView = () => {
+const SignupView = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
@@ -11,7 +11,6 @@ export const SignupView = () => {
 
         const data = { Username: username, Password: password, Email: email, Birthday: birthday };
 
-        // Replace SIGNUP_URL with your backend endpoint
         fetch("http://localhost:8080/users", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -78,3 +77,5 @@ export const SignupView = () => {
         </form>
     );
 };
+
+export default SignupView;
