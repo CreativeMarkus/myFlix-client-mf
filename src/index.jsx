@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainView from './Components/main-view/main-view';
-import { LoginView } from './Components/login-view/login-view';
+import LoginView from './Components/login-view/login-view';
 import SignupView from './Components/signup-view/signup-view';
 import { ProfileView } from './Components/profile-view/profile-view';
 import MovieView from './Components/movie-view/movie-view';
