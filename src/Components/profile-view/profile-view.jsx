@@ -1,51 +1,53 @@
 import React, { useState, useEffect } from 'react';
 
-export default function ProfileView({ user, token, setUser }) {
-    const [username, setUsername] = useState(user.Username);
-    const [email, setEmail] = useState(user.Email);
+export const ProfileView = () => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const updateProfile = (e) => {
-        e.preventDefault();
-        fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${user.Username}`, {
-            method: 'PUT',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ Username: username, Email: email })
-        })
-            .then(res => res.json())
-            .then(updatedUser => {
-                setUser(updatedUser);
-                localStorage.setItem('user', JSON.stringify(updatedUser));
-                alert('Profile updated!');
-            })
-            .catch(err => console.error(err));
-    };
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const username = localStorage.getItem('user');
 
-    const deleteProfile = () => {
-        if (window.confirm('Are you sure you want to delete your account?')) {
-            fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${user.Username}`, {
-                method: 'DELETE',
-                headers: { Authorization: `Bearer ${token}` }
-            })
-                .then(() => {
-                    localStorage.clear();
-                    window.location.href = '/signup';
-                })
-                .catch(err => console.error(err));
+        if (!token || !username) {
+            setLoading(false);
+            return;
         }
-    };
+
+        fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${username}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setUser(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return <div>Loading profile...</div>;
+    }
+
+    if (!user) {
+        return <div>No user data found. Please log in.</div>;
+    }
 
     return (
-        <div>
+        <div className="profile-view">
             <h2>Profile</h2>
-            <form onSubmit={updateProfile}>
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <button type="submit">Update Profile</button>
-            </form>
-            <button onClick={deleteProfile} style={{ color: 'red' }}>Delete Account</button>
+            <p><strong>Username:</strong> {user.Username}</p>
+            <p><strong>Email:</strong> {user.Email}</p>
+            <p><strong>Birthday:</strong> {user.Birthday ? new Date(user.Birthday).toLocaleDateString() : 'N/A'}</p>
         </div>
     );
-}
+};
