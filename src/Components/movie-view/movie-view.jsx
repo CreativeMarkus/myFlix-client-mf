@@ -1,62 +1,40 @@
 import React, { useState, useEffect } from "react";
-import LoginView from "../login-view/login-view";
-import SignupView from "../signup-view/signup-view";
-import { MovieCard } from "../movie-card/movie-card";
+import { useParams, Link } from "react-router-dom";
 
-export default function MainView() {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    const storedToken = localStorage.getItem("token");
-
-    const [user, setUser] = useState(storedUser || null);
-    const [token, setToken] = useState(storedToken || null);
-    const [movies, setMovies] = useState([]);
+export default function MovieView() {
+    const { movieId } = useParams();
+    const [movie, setMovie] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         if (!token) return;
 
-        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies", {
+        fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies/${movieId}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((response) => response.json())
-            .then((data) => setMovies(data))
-            .catch((err) => console.error(err));
-    }, [token]);
+            .then((data) => {
+                setMovie(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setLoading(false);
+            });
+    }, [movieId, token]);
 
-    if (!user) {
-        return (
-            <>
-                <h2>Login</h2>
-                <LoginView
-                    onLoggedIn={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                    }}
-                />
-
-                <h2>Sign Up</h2>
-                <SignupView />
-            </>
-        );
-    }
+    if (loading) return <div>Loading...</div>;
+    if (!movie) return <div>Movie not found</div>;
 
     return (
         <div>
-            <h1>Movies</h1>
-            <button
-                onClick={() => {
-                    setUser(null);
-                    setToken(null);
-                    localStorage.clear();
-                }}
-            >
-                Logout
-            </button>
-
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {movies.map((movie) => (
-                    <MovieCard key={movie._id} movie={movie} />
-                ))}
-            </div>
+            <h1>{movie.Title}</h1>
+            <img src={movie.ImagePath} alt={movie.Title} style={{ maxWidth: '300px' }} />
+            <p><strong>Description:</strong> {movie.Description}</p>
+            <p><strong>Genre:</strong> {movie.Genre?.Name}</p>
+            <p><strong>Director:</strong> {movie.Director?.Name}</p>
+            <Link to="/">Back to Movies</Link>
         </div>
     );
 }
