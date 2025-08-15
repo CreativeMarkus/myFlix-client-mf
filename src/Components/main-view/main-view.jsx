@@ -1,56 +1,50 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
-import LoginView from "../login-view/login-view";
-import SignupView from "../signup-view/signup-view";
 
-export default function MainView() {
+export default function MainView({ token }) {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const storedToken = localStorage.getItem("token");
-
     const [user, setUser] = useState(storedUser || null);
-    const [token, setToken] = useState(storedToken || null);
     const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!token) return;
+        setLoading(true);
+        setError("");
 
         fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies", {
             headers: { Authorization: `Bearer ${token}` },
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) throw new Error("Failed to fetch movies.");
+                return response.json();
+            })
             .then((data) => setMovies(data))
-            .catch((err) => console.error(err));
+            .catch((err) => setError(err.message))
+            .finally(() => setLoading(false));
     }, [token]);
 
-    if (!user) {
-        return (
-            <>
-                <h2>Login</h2>
-                <LoginView
-                    onLoggedIn={(user, token) => {
-                        setUser(user);
-                        setToken(token);
-                    }}
-                />
-
-                <h2>Sign Up</h2>
-                <SignupView />
-            </>
-        );
-    }
+    const handleLogout = () => {
+        setUser(null);
+        localStorage.clear();
+        navigate("/login");
+    };
 
     return (
         <div>
+            {/* Navigation bar */}
+            <nav style={{ marginBottom: "20px" }}>
+                <Link to="/" style={{ marginRight: "10px" }}>Movies</Link>
+                <Link to="/profile" style={{ marginRight: "10px" }}>Profile</Link>
+                <button onClick={handleLogout}>Logout</button>
+            </nav>
+
             <h1>Movies</h1>
-            <button
-                onClick={() => {
-                    setUser(null);
-                    setToken(null);
-                    localStorage.clear();
-                }}
-            >
-                Logout
-            </button>
+            {loading && <p>Loading movies...</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
 
             <div style={{ display: "flex", flexWrap: "wrap" }}>
                 {movies.map((movie) => (

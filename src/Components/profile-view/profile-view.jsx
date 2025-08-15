@@ -1,53 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 
-export const ProfileView = () => {
-    const [user, setUser] = useState(null);
+export const ProfileView = ({ user, token, setUser }) => {
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const username = localStorage.getItem('user');
+        if (!user || !token) return;
+        setLoading(true);
+        setError("");
 
-        if (!token || !username) {
-            setLoading(false);
-            return;
-        }
-
-        fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${username}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+        fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${user.Username}`, {
+            headers: { Authorization: `Bearer ${token}` },
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch profile data');
-                }
-                return response.json();
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to load profile.");
+                return res.json();
             })
-            .then(data => {
-                setUser(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, []);
+            .then((data) => setProfile(data))
+            .catch((err) => setError(err.message))
+            .finally(() => setLoading(false));
+    }, [user, token]);
 
-    if (loading) {
-        return <div>Loading profile...</div>;
-    }
-
-    if (!user) {
-        return <div>No user data found. Please log in.</div>;
-    }
+    if (loading) return <p>Loading profile...</p>;
+    if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
-        <div className="profile-view">
-            <h2>Profile</h2>
-            <p><strong>Username:</strong> {user.Username}</p>
-            <p><strong>Email:</strong> {user.Email}</p>
-            <p><strong>Birthday:</strong> {user.Birthday ? new Date(user.Birthday).toLocaleDateString() : 'N/A'}</p>
+        <div>
+            <h2>Your Profile</h2>
+            <div style={{ marginBottom: "10px" }}>
+                <strong>Username:</strong> {profile.Username}
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+                <strong>Email:</strong> {profile.Email}
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+                <strong>Birthday:</strong> {profile.Birthday
+                    ? new Date(profile.Birthday).toLocaleDateString()
+                    : "Not provided"}
+            </div>
         </div>
     );
 };
