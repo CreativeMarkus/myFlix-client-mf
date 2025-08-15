@@ -1,10 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
 
 export default function MainView({ token }) {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    const [user, setUser] = useState(storedUser || null);
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -28,7 +27,6 @@ export default function MainView({ token }) {
     }, [token]);
 
     const handleLogout = () => {
-        setUser(null);
         localStorage.clear();
         navigate("/login");
     };

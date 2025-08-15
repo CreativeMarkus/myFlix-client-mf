@@ -14,12 +14,7 @@ const LoginView = ({ onLoggedIn }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`Server error: ${response.status}`);
-                }
-                return response.json();
-            })
+            .then((response) => response.json())
             .then((data) => {
                 if (data.user && data.token) {
                     localStorage.setItem("user", JSON.stringify(data.user));
