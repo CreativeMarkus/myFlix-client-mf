@@ -10,9 +10,14 @@ const SignupView = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const data = { Username: username, Password: password, Email: email, Birthday: birthday };
+        const data = {
+            Username: username,
+            Password: password,
+            Email: email,
+            Birthday: birthday
+        };
 
-        fetch("http://localhost:8080/users", {
+        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/users", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -77,10 +82,8 @@ const SignupView = () => {
                 </label>
                 <button type="submit">Sign Up</button>
             </form>
-
             <p>
-                Already have an account?{" "}
-                <Link to="/login">Login here</Link>
+                Already have an account? <Link to="/login">Login here</Link>
             </p>
         </>
     );

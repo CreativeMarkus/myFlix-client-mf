@@ -7,10 +7,9 @@ const LoginView = ({ onLoggedIn }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
         const data = { Username: username, Password: password };
 
-        fetch("http://localhost:8080/login", {
+        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
