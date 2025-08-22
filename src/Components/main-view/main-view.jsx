@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
@@ -11,11 +10,14 @@ export default function MainView({ token }) {
 
     useEffect(() => {
         if (!token) return;
+
         setLoading(true);
         setError("");
 
         fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies", {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         })
             .then((response) => {
                 if (!response.ok) throw new Error("Failed to fetch movies.");
@@ -32,23 +34,24 @@ export default function MainView({ token }) {
     };
 
     return (
-        <div>
+        <>
             {/* Navigation bar */}
-            <nav style={{ marginBottom: "20px" }}>
-                <Link to="/" style={{ marginRight: "10px" }}>Movies</Link>
-                <Link to="/profile" style={{ marginRight: "10px" }}>Profile</Link>
+            <nav>
+                <Link to="/">Movies</Link>
+                <Link to="/profile">Profile</Link>
                 <button onClick={handleLogout}>Logout</button>
             </nav>
 
-            <h1>Movies</h1>
-            {loading && <p>Loading movies...</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            <h2>Movies</h2>
 
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {loading && <p>Loading movies...</p>}
+            {error && <p>{error}</p>}
+
+            <div className="movie-list">
                 {movies.map((movie) => (
                     <MovieCard key={movie._id} movie={movie} />
                 ))}
             </div>
-        </div>
+        </>
     );
 }

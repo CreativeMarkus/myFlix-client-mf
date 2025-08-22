@@ -6,6 +6,7 @@ import LoginView from './Components/login-view/login-view';
 import SignupView from './Components/signup-view/signup-view';
 import { ProfileView } from './Components/profile-view/profile-view';
 import MovieView from './Components/movie-view/movie-view';
+import "bootstrap/dist/css/bootstrap.min.css";
 import './index.scss';
 
 const App = () => {
