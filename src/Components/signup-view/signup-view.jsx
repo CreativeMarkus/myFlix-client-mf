@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SignupView = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [birthday, setBirthday] = useState("");
+    const [username, setusername] = useState("");
+    const [password, setpassword] = useState("");
+    const [email, setemail] = useState("");
+    const [birthday, setbirthday] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         const data = {
-            Username: username,
-            Password: password,
-            Email: email,
-            Birthday: birthday
+            username: username,
+            password: password,
+            email: email,
+            birthday: birthday
         };
 
         fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/users", {
@@ -25,10 +25,10 @@ const SignupView = () => {
             .then((response) => {
                 if (response.ok) {
                     alert("Signup successful! You can now log in.");
-                    setUsername("");
-                    setPassword("");
-                    setEmail("");
-                    setBirthday("");
+                    setusername("");
+                    setpassword("");
+                    setemail("");
+                    setbirthday("");
                 } else {
                     alert("Signup failed. Please check your input or try again.");
                 }
@@ -47,7 +47,7 @@ const SignupView = () => {
                     <input
                         type="text"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setusername(e.target.value)}
                         required
                         minLength="3"
                     />
@@ -57,7 +57,7 @@ const SignupView = () => {
                     <input
                         type="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setpassword(e.target.value)}
                         required
                         minLength="6"
                     />
@@ -67,7 +67,7 @@ const SignupView = () => {
                     <input
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setemail(e.target.value)}
                         required
                     />
                 </label>
@@ -76,7 +76,7 @@ const SignupView = () => {
                     <input
                         type="date"
                         value={birthday}
-                        onChange={(e) => setBirthday(e.target.value)}
+                        onChange={(e) => setbirthday(e.target.value)}
                         required
                     />
                 </label>
