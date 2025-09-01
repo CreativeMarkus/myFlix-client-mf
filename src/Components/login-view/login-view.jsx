@@ -7,19 +7,19 @@ const LoginView = ({ onLoggedIn }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = { Username: username, Password: password };
-
-        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/login", {
+        const data = { username: username, password: password };
+        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.user && data.token) {
-                    localStorage.setItem("user", JSON.stringify(data.user));
+                if (data.token) {
                     localStorage.setItem("token", data.token);
-                    onLoggedIn(data.user, data.token);
+                    const user = { username: username };
+                    localStorage.setItem("user", JSON.stringify(user));
+                    onLoggedIn(user, data.token);
                 } else {
                     alert("Invalid login credentials");
                 }
