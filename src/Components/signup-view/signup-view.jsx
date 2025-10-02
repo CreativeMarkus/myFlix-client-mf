@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SignupView = () => {
-    const [username, setusername] = useState("");
-    const [password, setpassword] = useState("");
-    const [email, setemail] = useState("");
-    const [birthday, setbirthday] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [birthday, setBirthday] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -25,10 +25,10 @@ const SignupView = () => {
             .then((response) => {
                 if (response.ok) {
                     alert("Signup successful! You can now log in.");
-                    setusername("");
-                    setpassword("");
-                    setemail("");
-                    setbirthday("");
+                    setUsername("");
+                    setPassword("");
+                    setEmail("");
+                    setBirthday("");
                 } else {
                     alert("Signup failed. Please check your input or try again.");
                 }
@@ -47,39 +47,43 @@ const SignupView = () => {
                     <input
                         type="text"
                         value={username}
-                        onChange={(e) => setusername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                         minLength="3"
                     />
                 </label>
+                <br />
                 <label>
                     Password:
                     <input
-                        type="password"
+                        type="Password"
                         value={password}
-                        onChange={(e) => setpassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                         minLength="6"
                     />
                 </label>
+                <br />
                 <label>
                     Email:
                     <input
                         type="email"
                         value={email}
-                        onChange={(e) => setemail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </label>
+                <br />
                 <label>
                     Birthday:
                     <input
                         type="date"
                         value={birthday}
-                        onChange={(e) => setbirthday(e.target.value)}
+                        onChange={(e) => setBirthday(e.target.value)}
                         required
                     />
                 </label>
+                <br />
                 <button type="submit">Sign Up</button>
             </form>
             <p>
