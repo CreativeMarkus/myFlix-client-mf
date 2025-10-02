@@ -7,12 +7,8 @@ const LoginView = ({ onLoggedIn }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        // --- CHANGE 1: Correct the payload keys to be capitalized ---
-        const data = { Username: username, Password: password };
-
-        // --- CHANGE 2: Correct the API endpoint (removed /users) ---
-        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/login", {
+        const data = { username: username, password: password };
+        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
