@@ -3,11 +3,19 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 export const MovieCard = ({ movie }) => {
+  if (!movie) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div style={{ border: '1px solid #ccc', margin: 10, padding: 10, width: 200 }}>
-      <img src={movie.ImagePath} alt={movie.Title} style={{ width: '100%' }} />
-      <h3>{movie.Title}</h3>
-      <p>{movie.Description.substring(0, 100)}...</p>
+      <img
+        src={movie.ImagePath || 'placeholder-image-url'}
+        alt={movie.Title || 'Movie'}
+        style={{ width: '100%' }}
+      />
+      <h3>{movie.Title || 'Untitled'}</h3>
+      <p>{movie.Description ? movie.Description.substring(0, 100) + '...' : 'No description available'}</p>
       <Link to={`/movies/${movie._id}`}>View Details</Link>
     </div>
   );

@@ -6,16 +6,15 @@ const SignupView = () => {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [birthday, setBirthday] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setError("");
+        setSuccess("");
 
-        const data = {
-            username: username,
-            password: password,
-            email: email,
-            birthday: birthday
-        };
+        const data = { Username: username, Password: password, Email: email, Birthday: birthday };
 
         fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/users", {
             method: "POST",
@@ -23,73 +22,86 @@ const SignupView = () => {
             body: JSON.stringify(data),
         })
             .then((response) => {
-                if (response.ok) {
-                    alert("Signup successful! You can now log in.");
-                    setUsername("");
-                    setPassword("");
-                    setEmail("");
-                    setBirthday("");
-                } else {
-                    alert("Signup failed. Please check your input or try again.");
+                if (!response.ok) {
+                    return response.text().then((text) => {
+                        throw new Error(text || "Signup failed");
+                    });
                 }
+                return response.json();
+            })
+            .then(() => {
+                setSuccess("Signup successful! You can now log in.");
+                setUsername("");
+                setPassword("");
+                setEmail("");
+                setBirthday("");
             })
             .catch((error) => {
-                console.error("Error during signup:", error);
-                alert("Signup failed due to a network error.");
+                console.error("Signup error:", error);
+                setError(error.message || "Signup failed due to a network error.");
             });
     };
 
     return (
-        <>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
+        <div className="container mt-5" style={{ maxWidth: "400px" }}>
+            <h2 className="text-center mb-4">Sign Up</h2>
+            <form onSubmit={handleSubmit} className="p-4 border rounded bg-light shadow-sm">
+                <div className="mb-3">
+                    <label className="form-label">Username</label>
                     <input
                         type="text"
+                        className="form-control"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                         minLength="3"
                     />
-                </label>
-                <br />
-                <label>
-                    Password:
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Password</label>
                     <input
-                        type="Password"
+                        type="password"
+                        className="form-control"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         minLength="6"
                     />
-                </label>
-                <br />
-                <label>
-                    Email:
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Email</label>
                     <input
                         type="email"
+                        className="form-control"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
-                </label>
-                <br />
-                <label>
-                    Birthday:
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Birthday</label>
                     <input
                         type="date"
+                        className="form-control"
                         value={birthday}
                         onChange={(e) => setBirthday(e.target.value)}
                         required
                     />
-                </label>
-                <br />
-                <button type="submit">Sign Up</button>
+                </div>
+
+                {error && <div className="alert alert-danger">{error}</div>}
+                {success && <div className="alert alert-success">{success}</div>}
+
+                <button type="submit" className="btn btn-success w-100">Sign Up</button>
             </form>
-            <p>
+
+            <p className="text-center mt-3">
                 Already have an account? <Link to="/login">Login here</Link>
             </p>
-        </>
+        </div>
     );
 };
 
