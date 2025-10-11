@@ -14,27 +14,47 @@ const LoginView = ({ onLoggedIn }) => {
 
         const data = { Username: username, Password: password };
 
+        console.log('Attempting login with payload:', data);
+
         fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    return response.json().then((err) => {
-                        throw new Error(err.message || "Invalid login credentials");
-                    });
+            .then(async (response) => {
+                // Safely read response body as text and try to parse JSON
+                const text = await response.text();
+                let parsed;
+                try {
+                    parsed = text ? JSON.parse(text) : {};
+                } catch (e) {
+                    parsed = text;
                 }
-                return response.json();
+                console.log('Login response status:', response.status, 'body:', parsed);
+
+                if (!response.ok) {
+                    const message = (parsed && parsed.message) || (typeof parsed === 'string' && parsed) || 'Invalid login credentials';
+                    throw new Error(message);
+                }
+
+                return parsed;
             })
             .then((data) => {
-                if (data.token) {
-                    localStorage.setItem("token", data.token);
-                    const user = { username: username };
+                console.log('Parsed login data:', data);
+                // Accept several possible token field names from different backends
+                const tokenValue = data && (data.token || data.accessToken || data.access_token || data.jwt || data.Token);
+
+                if (tokenValue) {
+                    localStorage.setItem("token", tokenValue);
+
+                    // Prefer user object returned by server, fall back to username
+                    const user = (data && data.user) || { username };
                     localStorage.setItem("user", JSON.stringify(user));
-                    onLoggedIn(user, data.token);
+
+                    onLoggedIn(user, tokenValue);
                 } else {
-                    setError("Invalid login credentials");
+                    setError('Login succeeded but token not found. Check console for response.');
+                    console.error('Token not found in login response:', data);
                 }
             })
             .catch((error) => {
