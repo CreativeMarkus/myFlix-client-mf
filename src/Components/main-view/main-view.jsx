@@ -1,57 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { MovieCard } from "../movie-card/movie-card";
+import { useState, useEffect } from 'react';
+import { MovieCard } from '../movie-card/movie-card';
+import { MovieView } from '../movie-view/movie-view';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
-export default function MainView({ token }) {
+export const MainView = ({ token }) => {
     const [movies, setMovies] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const navigate = useNavigate();
+    const [selectedMovie, setSelectedMovie] = useState(null);
 
     useEffect(() => {
-        if (!token) return;
-
-        setLoading(true);
-        setError("");
-
-        fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+        fetch('https://myflix-api.com/movies', {
+            headers: { Authorization: `Bearer ${token}` }
         })
-            .then((response) => {
-                if (!response.ok) throw new Error("Failed to fetch movies.");
-                return response.json();
-            })
-            .then((data) => setMovies(data))
-            .catch((err) => setError(err.message))
-            .finally(() => setLoading(false));
+            .then((response) => response.json())
+            .then((data) => setMovies(data));
     }, [token]);
 
-    const handleLogout = () => {
-        localStorage.clear();
-        navigate("/login");
-    };
-
     return (
-        <>
-            {/* Navigation bar */}
-            <nav>
-                <Link to="/">Movies</Link>
-                <Link to="/profile">Profile</Link>
-                <button onClick={handleLogout}>Logout</button>
-            </nav>
-
-            <h2>Movies</h2>
-
-            {loading && <p>Loading movies...</p>}
-            {error && <p>{error}</p>}
-
-            <div className="movie-list">
-                {movies.map((movie) => (
-                    <MovieCard key={movie._id} movie={movie} />
-                ))}
-            </div>
-        </>
+        <Row className="justify-content-md-center">
+            {selectedMovie ? (
+                <Col md={8}>
+                    <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
+                </Col>
+            ) : movies.length === 0 ? (
+                <div>The list is empty!</div>
+            ) : (
+                <>
+                    {movies.map((movie) => (
+                        <Col className="mb-5" key={movie._id} md={3}>
+                            <MovieCard
+                                movie={movie}
+                                onMovieClick={(newSelectedMovie) => setSelectedMovie(newSelectedMovie)}
+                            />
+                        </Col>
+                    ))}
+                </>
+            )}
+        </Row>
     );
-}
+};
