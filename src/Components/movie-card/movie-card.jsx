@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import './movie-card.scss';
 
 export const MovieCard = ({ movie }) => {
+  const isRemote = movie.ImagePath.startsWith("http");
   return (
     <Card className="h-100">
       <Card.Img
         variant="top"
-        src={`/images/${movie.ImagePath}`}
+        src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = "https://placehold.co/300x450?text=No+Image";

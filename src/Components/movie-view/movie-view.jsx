@@ -34,14 +34,17 @@ export const MovieView = ({ token }) => {
     if (loading) return <div>Loading...</div>;
     if (!movie) return <div>Movie not found</div>;
 
+    const isRemote = movie.ImagePath.startsWith("http");
+
     return (
         <div className="movie-view">
             <Card>
                 <Card.Img
                     variant="top"
-                    src={`/images/${movie.ImagePath}`}
+                    src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
                     onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/300x450?text=No+Image";
+                        e.target.onerror = null;
+                        e.target.src = "https://placehold.co/300x450?text=No+Image";
                     }}
                 />
                 <Card.Body>
