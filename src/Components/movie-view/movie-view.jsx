@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
 import './movie-view.scss';
 
 export const MovieView = ({ token }) => {
@@ -38,26 +37,27 @@ export const MovieView = ({ token }) => {
 
     return (
         <div className="movie-view">
-            <Card>
-                <Card.Img
-                    variant="top"
+            <div>
+                <img
                     src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
+                    className="movie-poster"
+                    alt={movie.Title}
                     onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "https://placehold.co/300x450?text=No+Image";
                     }}
                 />
-                <Card.Body>
-                    <Card.Title>{movie.Title}</Card.Title>
-                    <Card.Text>{movie.Description}</Card.Text>
-                    <button
-                        onClick={handleBackClick}
-                        className="btn btn-primary"
-                    >
-                        Back
-                    </button>
-                </Card.Body>
-            </Card>
+            </div>
+            <div>
+                <h2>{movie.Title}</h2>
+                <p>{movie.Description}</p>
+                <button
+                    onClick={() => navigate(-1)}
+                    className="btn btn-primary"
+                >
+                    Back
+                </button>
+            </div>
         </div>
     );
 };

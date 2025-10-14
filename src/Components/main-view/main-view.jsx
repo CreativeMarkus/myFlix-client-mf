@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MovieList } from "../movie-list/movie-list";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 const MainView = ({ token, onLogout }) => {
     console.log("MainView rendered. Token:", token);
@@ -38,7 +38,11 @@ const MainView = ({ token, onLogout }) => {
                     Sign Out
                 </button>
             </div>
-            <MovieList movies={movies} />
+            <Row>
+                <Col>
+                    <MovieList movies={movies} />
+                </Col>
+            </Row>
         </Container>
     );
 };

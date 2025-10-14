@@ -18,9 +18,9 @@ export const MovieCard = ({ movie }) => {
       <Card.Body>
         <Card.Title>{movie.Title}</Card.Title>
         <Card.Text>{movie.Description}</Card.Text>
-        <Link to={`/movies/${movie._id}`}>
-          <Button variant="primary">Open</Button>
-        </Link>
+        <Button as={Link} to={`/movies/${movie._id}`} variant="primary">
+          Open
+        </Button>
       </Card.Body>
     </Card>
   );
