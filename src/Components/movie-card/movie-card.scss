@@ -1,7 +1,17 @@
-.card {
-  transition: transform 0.2s ease-in-out;
+.movie-card {
+  transition: transform 0.2s;
 
   &:hover {
-    transform: scale(1.02);
+    transform: scale(1.03);
+  }
+
+  .card-img-top {
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
   }
 }

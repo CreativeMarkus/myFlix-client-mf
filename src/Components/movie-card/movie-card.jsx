@@ -1,27 +1,28 @@
-import PropTypes from 'prop-types';
-import { Button, Card } from 'react-bootstrap';
+import React from 'react';
+import { Card, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import './movie-card.scss';
 
-export const MovieCard = ({ movie, onMovieClick }) => {
+export const MovieCard = ({ movie }) => {
   return (
     <Card className="h-100">
-      <Card.Img variant="top" src={movie.ImagePath} />
+      <Card.Img
+        variant="top"
+        src={`/images/${movie.ImagePath}`}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "https://placehold.co/300x450?text=No+Image";
+        }}
+      />
       <Card.Body>
         <Card.Title>{movie.Title}</Card.Title>
         <Card.Text>{movie.Description}</Card.Text>
-        <Button onClick={() => onMovieClick(movie)} variant="primary">
-          Open
-        </Button>
+        <Link to={`/movies/${movie._id}`}>
+          <Button variant="primary">Open</Button>
+        </Link>
       </Card.Body>
     </Card>
   );
 };
 
-MovieCard.propTypes = {
-  movie: PropTypes.shape({
-    Title: PropTypes.string.isRequired,
-    Description: PropTypes.string.isRequired,
-    ImagePath: PropTypes.string.isRequired
-  }).isRequired,
-  onMovieClick: PropTypes.func.isRequired
-};
+export default MovieCard;
