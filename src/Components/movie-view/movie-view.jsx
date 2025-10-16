@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstrap';
 import './movie-view.scss';
 
 export const MovieView = ({ token }) => {
@@ -29,8 +29,21 @@ export const MovieView = ({ token }) => {
 
     const handleBackClick = () => navigate(-1);
 
-    if (loading) return <div>Loading...</div>;
-    if (!movie) return <div>Movie not found</div>;
+    if (loading) {
+        return (
+            <Container className="py-5 d-flex justify-content-center">
+                <Spinner animation="border" role="status" />
+            </Container>
+        );
+    }
+
+    if (!movie) {
+        return (
+            <Container className="py-5">
+                <Alert variant="warning" className="mb-0">Movie not found</Alert>
+            </Container>
+        );
+    }
 
     const isRemote = typeof movie.ImagePath === "string" && movie.ImagePath.startsWith("http");
 

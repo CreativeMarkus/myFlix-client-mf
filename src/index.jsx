@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import MainView from './Components/main-view/main-view';
 import LoginView from './Components/login-view/login-view';
@@ -17,7 +18,6 @@ const App = () => {
 
     console.log("App rendered. Token:", token);
 
-    // Add logout handler
     const handleLogout = () => {
         setUser(null);
         setToken(null);

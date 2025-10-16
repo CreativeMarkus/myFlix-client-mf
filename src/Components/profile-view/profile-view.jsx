@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Container, Row, Col, Card, Alert, Spinner } from "react-bootstrap";
 
 export const ProfileView = ({ user, token, setUser }) => {
     const [profile, setProfile] = useState(null);
@@ -9,7 +10,6 @@ export const ProfileView = ({ user, token, setUser }) => {
         if (!user || !token) return;
         setLoading(true);
         setError("");
-
         fetch(`https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${user.Username}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -22,23 +22,45 @@ export const ProfileView = ({ user, token, setUser }) => {
             .finally(() => setLoading(false));
     }, [user, token]);
 
-    if (loading) return <p>Loading profile...</p>;
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
+    if (loading) {
+        return (
+            <Container className="py-5 d-flex justify-content-center">
+                <Spinner animation="border" role="status" />
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container className="py-4">
+                <Alert variant="danger" className="mb-0">{error}</Alert>
+            </Container>
+        );
+    }
 
     return (
-        <div>
-            <h2>Your Profile</h2>
-            <div style={{ marginBottom: "10px" }}>
-                <strong>Username:</strong> {profile.Username}
-            </div>
-            <div style={{ marginBottom: "10px" }}>
-                <strong>Email:</strong> {profile.Email}
-            </div>
-            <div style={{ marginBottom: "10px" }}>
-                <strong>Birthday:</strong> {profile.Birthday
-                    ? new Date(profile.Birthday).toLocaleDateString()
-                    : "Not provided"}
-            </div>
-        </div>
+        <Container className="py-4">
+            <Row className="justify-content-center">
+                <Col xs={12} md={8} lg={6}>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title className="mb-3">Your Profile</Card.Title>
+                            <div className="mb-2">
+                                <strong>Username:</strong> {profile?.Username}
+                            </div>
+                            <div className="mb-2">
+                                <strong>Email:</strong> {profile?.Email}
+                            </div>
+                            <div className="mb-2">
+                                <strong>Birthday:</strong>{" "}
+                                {profile?.Birthday
+                                    ? new Date(profile.Birthday).toLocaleDateString()
+                                    : "Not provided"}
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
