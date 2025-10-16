@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import './movie-view.scss';
 
 export const MovieView = ({ token }) => {
@@ -24,41 +25,42 @@ export const MovieView = ({ token }) => {
                 console.error('Error fetching movie:', error);
                 setLoading(false);
             });
-    }, [movieId, token]); // Only runs when movieId or token changes
+    }, [movieId, token]);
 
-    const handleBackClick = () => {
-        navigate(-1);
-    };
+    const handleBackClick = () => navigate(-1);
 
     if (loading) return <div>Loading...</div>;
     if (!movie) return <div>Movie not found</div>;
 
-    const isRemote = movie.ImagePath.startsWith("http");
+    const isRemote = typeof movie.ImagePath === "string" && movie.ImagePath.startsWith("http");
 
     return (
-        <div className="movie-view">
-            <div>
-                <img
-                    src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
-                    className="movie-poster"
-                    alt={movie.Title}
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://placehold.co/300x450?text=No+Image";
-                    }}
-                />
-            </div>
-            <div>
-                <h2>{movie.Title}</h2>
-                <p>{movie.Description}</p>
-                <button
-                    onClick={() => navigate(-1)}
-                    className="btn btn-primary"
-                >
-                    Back
-                </button>
-            </div>
-        </div>
+        <Container className="my-4">
+            <Row className="g-4">
+                <Col xs={12} md={4}>
+                    <img
+                        src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
+                        alt={movie.Title}
+                        className="img-fluid rounded"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://placehold.co/300x450?text=No+Image";
+                        }}
+                    />
+                </Col>
+                <Col xs={12} md={8}>
+                    <Card className="h-100">
+                        <Card.Body className="d-flex flex-column">
+                            <Card.Title>{movie.Title}</Card.Title>
+                            <Card.Text className="mb-3">{movie.Description}</Card.Text>
+                            <Button variant="primary" onClick={handleBackClick} className="mt-auto">
+                                Back
+                            </Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

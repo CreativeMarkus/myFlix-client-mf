@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { MovieList } from "../movie-list/movie-list";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Nav, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import MovieCard from "../movie-card/movie-card";
 
 const MainView = ({ token, onLogout }) => {
     console.log("MainView rendered. Token:", token);
@@ -24,24 +25,36 @@ const MainView = ({ token, onLogout }) => {
                 console.error("Error fetching movies:", error);
                 setLoading(false);
             });
-    }, [token]); // Only runs when token changes
+    }, [token]);
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <Container>
-            <div className="d-flex justify-content-between align-items-center my-4">
-                <h1>Movies</h1>
-                <button className="btn btn-outline-danger" onClick={onLogout}>
-                    Sign Out
-                </button>
-            </div>
-            <Row>
-                <Col>
-                    <MovieList movies={movies} />
-                </Col>
+        <Container className="my-4">
+            <Navbar bg="light" expand="md" className="mb-4">
+                <Container>
+                    <Navbar.Brand as={Link} to="/">myFlix</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="main-navbar" />
+                    <Navbar.Collapse id="main-navbar">
+                        <Nav className="me-auto">
+                            <Nav.Link as={Link} to="/">Home</Nav.Link>
+                            <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                        </Nav>
+                        <div className="d-flex gap-2">
+                            <Button variant="outline-danger" onClick={onLogout}>Sign Out</Button>
+                        </div>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+
+            <Row className="g-4">
+                {movies.map((movie) => (
+                    <Col key={movie._id} xs={12} sm={6} md={4} lg={3}>
+                        <MovieCard movie={movie} />
+                    </Col>
+                ))}
             </Row>
         </Container>
     );

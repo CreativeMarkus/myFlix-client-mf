@@ -1,13 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Container } from "react-bootstrap";
+import { Container } from 'react-bootstrap';
 import MainView from './Components/main-view/main-view';
 import LoginView from './Components/login-view/login-view';
 import SignupView from './Components/signup-view/signup-view';
 import { ProfileView } from './Components/profile-view/profile-view';
 import MovieView from './Components/movie-view/movie-view';
-import "bootstrap/dist/css/bootstrap.min.css";
 import './index.scss';
 
 const App = () => {
@@ -28,7 +27,7 @@ const App = () => {
 
     return (
         <BrowserRouter>
-            <Container>
+            <Container className="py-4">
                 <Routes>
                     <Route
                         path="/login"
