@@ -51,15 +51,17 @@ export const MovieView = ({ token }) => {
         <Container className="my-4">
             <Row className="g-4">
                 <Col xs={12} md={4}>
-                    <img
-                        src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
-                        alt={movie.Title}
-                        className="img-fluid rounded"
-                        onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = "https://placehold.co/300x450?text=No+Image";
-                        }}
-                    />
+                    <Card className="h-100">
+                        <Card.Img
+                            variant="top"
+                            src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
+                            alt={movie.Title}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://placehold.co/300x450?text=No+Image";
+                            }}
+                        />
+                    </Card>
                 </Col>
                 <Col xs={12} md={8}>
                     <Card className="h-100">
