@@ -8,6 +8,7 @@ import SignupView from './Components/signup-view/signup-view';
 import { ProfileView } from './Components/profile-view/profile-view';
 import MovieView from './Components/movie-view/movie-view';
 import './index.scss';
+import NavigationBar from './Components/navigation-bar/navigation-bar';
 
 const App = () => {
     const [user, setUser] = React.useState(
@@ -24,8 +25,21 @@ const App = () => {
         localStorage.removeItem('token');
     };
 
+    React.useEffect(() => {
+        const onUserUpdated = (e) => {
+            const updated = e.detail;
+            if (updated) {
+                setUser(updated);
+                localStorage.setItem('user', JSON.stringify(updated));
+            }
+        };
+        window.addEventListener('userUpdated', onUserUpdated);
+        return () => window.removeEventListener('userUpdated', onUserUpdated);
+    }, []);
+
     return (
         <BrowserRouter>
+            <NavigationBar user={user} onLogout={handleLogout} />
             <Routes>
                 <Route
                     path="/login"

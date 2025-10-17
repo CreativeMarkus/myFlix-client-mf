@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Navbar, Nav, Button, Spinner, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import MovieCard from "../movie-card/movie-card";
 
 const MainView = ({ token, onLogout }) => {
@@ -35,26 +34,6 @@ const MainView = ({ token, onLogout }) => {
 
     return (
         <>
-            <Navbar
-                bg="secondary-subtle"
-                variant="light"
-                data-bs-theme="light"
-                expand="md"
-                className="mb-4 w-100 py-2"
-            >
-                <Navbar.Brand as={Link} to="/" className="px-3">myFlix</Navbar.Brand>
-                <Navbar.Toggle aria-controls="main-navbar" />
-                <Navbar.Collapse id="main-navbar" className="px-3">
-                    <Nav className="me-auto">
-                        <Nav.Link as={Link} to="/">Movies</Nav.Link>
-                        <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
-                    </Nav>
-                    <div className="d-flex gap-2">
-                        <Button variant="outline-dark" onClick={onLogout}>Logout</Button>
-                    </div>
-                </Navbar.Collapse>
-            </Navbar>
-
             <Container className="my-4">
                 {loading && (
                     <div className="py-5 d-flex justify-content-center">
