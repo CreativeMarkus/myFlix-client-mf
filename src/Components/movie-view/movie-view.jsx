@@ -9,7 +9,6 @@ export const MovieView = ({ token }) => {
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // moved here: hooks must run before any early returns
     const [isFavorite, setIsFavorite] = useState(false);
     const [busy, setBusy] = useState(false);
 
@@ -32,13 +31,11 @@ export const MovieView = ({ token }) => {
 
     const favIncludes = (arr, id) => Array.isArray(arr) && arr.some(x => String(x) === String(id));
 
-    // keep local favorite state in sync when the movie changes
     useEffect(() => {
         const stored = JSON.parse(localStorage.getItem('user'));
         setIsFavorite(favIncludes(stored?.FavoriteMovies, movie?._id));
     }, [movie]);
 
-    // also react when other parts update the user (e.g., MovieCard)
     useEffect(() => {
         const handler = (e) => {
             const updated = e.detail;
@@ -66,7 +63,7 @@ export const MovieView = ({ token }) => {
         const method = isFavorite ? 'DELETE' : 'POST';
         try {
             const res = await fetch(
-                `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}/movies/${movie._id}`,
+                `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}/favorites/${movie._id}`,
                 {
                     method,
                     headers: {

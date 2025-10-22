@@ -5,12 +5,11 @@ import { Link } from 'react-router-dom';
 export const MovieCard = ({ movie }) => {
   const isRemote = typeof movie.ImagePath === "string" && movie.ImagePath.startsWith("http");
   const favIncludes = (arr, id) => Array.isArray(arr) && arr.some(x => String(x) === String(id));
-  // favorite state derived from localStorage; updates after API calls
+
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const [isFavorite, setIsFavorite] = useState(favIncludes(storedUser?.FavoriteMovies, movie._id));
   const [busy, setBusy] = useState(false);
 
-  // keep in sync when other parts of the app update the user (e.g., MovieView/ProfileView)
   useEffect(() => {
     const handler = (e) => {
       const updated = e.detail || JSON.parse(localStorage.getItem('user'));
@@ -37,7 +36,7 @@ export const MovieCard = ({ movie }) => {
     const method = isFavorite ? 'DELETE' : 'POST';
     try {
       const res = await fetch(
-        `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}/movies/${movie._id}`,
+        `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}/favorites/${movie._id}`,
         { method, headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }
       );
       if (!res.ok) {

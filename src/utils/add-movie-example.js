@@ -1,4 +1,4 @@
-const token = 'YOUR_AUTH_TOKEN'; // Replace with your actual admin token
+const token = 'YOUR_AUTH_TOKEN';
 
 const movieData = {
     Title: "Inception",
