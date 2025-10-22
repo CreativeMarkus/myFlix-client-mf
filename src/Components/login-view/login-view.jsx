@@ -8,54 +8,28 @@ const LoginView = ({ onLoggedIn }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError("");
-    setLoading(true);
-
-    const data = {
-      Username: username.trim(),
-      Password: password,
-    };
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      console.log("Sending login request with:", JSON.stringify(data, null, 2));
-      const response = await fetch(
+      const res = await fetch(
         "https://movieapi1-40cbbcb4b0ea.herokuapp.com/login",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ Username: username, Password: password }),
         }
       );
+      const data = await res.json();
+      if (!res.ok || !data?.token || !data?.user) throw new Error(data?.message || "Login failed");
 
-      const responseData = await response.text();
-      console.log("Raw response:", responseData);
+      // Persist auth
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
 
-      let parsedData;
-      try {
-        parsedData = JSON.parse(responseData);
-      } catch (e) {
-        console.error("Failed to parse response as JSON:", responseData);
-        throw new Error("Invalid response format from server");
-      }
-
-      if (!response.ok) {
-        throw new Error(parsedData.message || `Login failed: ${responseData}`);
-      }
-
-      if (!parsedData.user || !parsedData.token) {
-        throw new Error("Invalid response format: missing user or token");
-      }
-
-      localStorage.setItem("user", JSON.stringify(parsedData.user));
-      localStorage.setItem("token", parsedData.token);
-      onLoggedIn(parsedData.user, parsedData.token);
-    } catch (error) {
-      console.error("Login error details:", error);
-      setError(error.message);
+      onLoggedIn(data.user, data.token);
+    } catch (err) {
+      console.error("Login failed:", err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }

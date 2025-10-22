@@ -20,35 +20,59 @@ export const MovieCard = ({ movie }) => {
   }, [movie._id]);
 
   const fetchUpdatedUser = async (username, token) => {
-    const resUser = await fetch(
-      `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }
-    );
-    if (!resUser.ok) throw new Error('Failed to refresh user after favorite update');
+    const url = `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}`;
+    console.log('[fav] refresh user GET', url);
+    const resUser = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' }
+    });
+    if (!resUser.ok) throw new Error(`Failed to refresh user (${resUser.status})`);
     return resUser.json();
   };
 
+  const getAuth = () => {
+    const tkn = localStorage.getItem('token');
+    let username = null;
+    try { username = JSON.parse(localStorage.getItem('user'))?.Username || null; } catch { }
+    if (!username && tkn) {
+      try {
+        const payload = JSON.parse(atob(tkn.split('.')[1] || ''));
+        username = payload?.sub ?? null;
+      } catch { }
+    }
+    return { tkn, username };
+  };
+
   const toggleFavorite = async () => {
-    const token = localStorage.getItem('token');
-    const username = JSON.parse(localStorage.getItem('user'))?.Username;
-    if (!token || !username) return;
+    const { tkn, username } = getAuth();
+    if (!tkn || !username || !movie?._id) {
+      console.error('[fav] Missing token/username/movieId', { hasToken: !!tkn, username, movieId: movie?._id });
+      return;
+    }
+    if (busy) return;
     setBusy(true);
     const method = isFavorite ? 'DELETE' : 'POST';
+    const url = `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}/favorites/${movie._id}`;
+    console.log(`[fav] ${method} ${url}`);
     try {
-      const res = await fetch(
-        `https://movieapi1-40cbbcb4b0ea.herokuapp.com/users/${encodeURIComponent(username)}/favorites/${movie._id}`,
-        { method, headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }
-      );
-      if (!res.ok) {
-        const msg = await res.text().catch(() => '');
-        throw new Error(msg || 'Favorite update failed');
-      }
-      const updatedUser = await fetchUpdatedUser(username, token);
+      const res = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${tkn}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: method === 'POST' ? '{}' : undefined
+      });
+      const text = await res.text().catch(() => '');
+      console.log('[fav] status:', res.status, 'body:', text);
+      if (!res.ok) throw new Error(text || `Favorite update failed (${res.status})`);
+      const updatedUser = await fetchUpdatedUser(username, tkn);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       window.dispatchEvent(new CustomEvent('userUpdated', { detail: updatedUser }));
       setIsFavorite(favIncludes(updatedUser.FavoriteMovies, movie._id));
     } catch (e) {
-      console.error(e);
+      console.error('[fav] error:', e);
+      alert(`Favorite action failed: ${e.message}`);
     } finally {
       setBusy(false);
     }
