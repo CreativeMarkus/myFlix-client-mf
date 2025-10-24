@@ -121,7 +121,6 @@ export const MovieCard = ({ movie }) => {
   );
 };
 
-// ** RESOLVED CONFLICT SECTION **
 MovieCard.propTypes = {
   movie: PropTypes.shape({
     _id: PropTypes.string.isRequired,
