@@ -14,6 +14,8 @@ export const ProfileView = ({ user, token, setUser }) => {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState(null);
 
+    const [favoriteMovies, setFavoriteMovies] = useState([]); // added
+
     const navigate = useNavigate();
 
     const resolveAuth = useCallback(() => {
@@ -39,6 +41,23 @@ export const ProfileView = ({ user, token, setUser }) => {
         return resUser.json();
     };
 
+    const fetchFavoriteDetails = useCallback(async (tkn, favoriteIds) => { // added
+        try {
+            const res = await fetch(
+                "https://movieapi1-40cbbcb4b0ea.herokuapp.com/movies",
+                { headers: { Authorization: `Bearer ${tkn}`, Accept: "application/json" } }
+            );
+            if (!res.ok) throw new Error(`Failed to load movies (${res.status})`);
+            const allMovies = await res.json();
+            const idSet = new Set((favoriteIds || []).map((x) => String(typeof x === "string" ? x : x?._id)));
+            const details = (allMovies || []).filter((m) => idSet.has(String(m._id)));
+            setFavoriteMovies(details);
+        } catch (e) {
+            console.error("[favorites] load error:", e);
+            setFavoriteMovies([]);
+        }
+    }, []);
+
     const loadProfile = useCallback(async () => {
         const { tkn, username, storedUser } = resolveAuth();
         if (!tkn) {
@@ -62,12 +81,13 @@ export const ProfileView = ({ user, token, setUser }) => {
             setProfile(userObj);
             setNewUsername(userObj.Username || "");
             setNewEmail(userObj.Email || "");
+            await fetchFavoriteDetails(tkn, userObj.FavoriteMovies); // added
         } catch (e) {
             setError(e.message || "Failed to load profile.");
         } finally {
             setLoading(false);
         }
-    }, [resolveAuth, user]);
+    }, [resolveAuth, user, fetchFavoriteDetails]);
 
     useEffect(() => { loadProfile(); }, [loadProfile]);
 
@@ -93,6 +113,7 @@ export const ProfileView = ({ user, token, setUser }) => {
             window.dispatchEvent(new CustomEvent("userUpdated", { detail: userObj }));
             setProfile(userObj);
             setMessage({ type: "success", text: "Favorite removed." });
+            setFavoriteMovies((prev) => prev.filter((m) => String(m._id) !== String(movieId))); // added
         } catch (e) {
             console.error(e);
             setMessage({ type: "danger", text: `Could not remove favorite: ${e.message}` });
@@ -253,16 +274,31 @@ export const ProfileView = ({ user, token, setUser }) => {
 
                     <div>
                         <strong>Favorite Movies:</strong>
-                        {profile?.FavoriteMovies?.length ? (
+                        {favoriteMovies?.length ? (
                             <ul style={{ listStyle: "none", padding: 0 }}>
-                                {profile.FavoriteMovies.map((movie) => {
-                                    const id = movie?._id ?? movie;
+                                {favoriteMovies.map((movie) => {
+                                    const id = movie._id;
+                                    const isRemote = typeof movie.ImagePath === "string" && movie.ImagePath.startsWith("http");
                                     return (
-                                        <li key={id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                                        <li
+                                            key={id}
+                                            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}
+                                        >
                                             <div style={{ display: "flex", alignItems: "center" }}>
                                                 {movie?.ImagePath ? (
-                                                    <img src={movie.ImagePath} alt={movie?.Title || "Movie"} style={{ width: "80px", height: "120px", objectFit: "cover", borderRadius: "8px", marginRight: "15px" }} />
-                                                ) : null}
+                                                    <img
+                                                        src={isRemote ? movie.ImagePath : `/images/${movie.ImagePath}`}
+                                                        alt={movie?.Title || "Movie"}
+                                                        style={{ width: "80px", height: "120px", objectFit: "cover", borderRadius: "8px", marginRight: "15px" }}
+                                                        onError={(e) => { e.currentTarget.src = "https://placehold.co/80x120?text=No+Image"; }}
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src="https://placehold.co/80x120?text=No+Image"
+                                                        alt="No poster"
+                                                        style={{ width: "80px", height: "120px", objectFit: "cover", borderRadius: "8px", marginRight: "15px" }}
+                                                    />
+                                                )}
                                                 <div>
                                                     <strong>{movie?.Title || id}</strong><br />
                                                     Genre: {movie?.Genre?.Name || "N/A"}<br />
@@ -270,8 +306,20 @@ export const ProfileView = ({ user, token, setUser }) => {
                                                 </div>
                                             </div>
 
-                                            <Button variant="outline-danger" size="sm" onClick={() => removeFavorite(id)} disabled={removingId === String(id)}>
-                                                {removingId === String(id) ? (<><Spinner as="span" animation="border" size="sm" className="me-2" />Removing...</>) : "Remove"}
+                                            <Button
+                                                variant="outline-danger"
+                                                size="sm"
+                                                onClick={() => removeFavorite(id)}
+                                                disabled={removingId === String(id)}
+                                            >
+                                                {removingId === String(id) ? (
+                                                    <>
+                                                        <Spinner as="span" animation="border" size="sm" className="me-2" />
+                                                        Removing...
+                                                    </>
+                                                ) : (
+                                                    "Remove"
+                                                )}
                                             </Button>
                                         </li>
                                     );
