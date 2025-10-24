@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from "react-bootstrap";
 
 const SignupView = () => {
     const [username, setUsername] = useState("");
@@ -8,11 +9,13 @@ const SignupView = () => {
     const [birthday, setBirthday] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setError("");
         setSuccess("");
+        setSubmitting(true);
 
         const data = { Username: username, Password: password, Email: email, Birthday: birthday };
 
@@ -39,69 +42,88 @@ const SignupView = () => {
             .catch((error) => {
                 console.error("Signup error:", error);
                 setError(error.message || "Signup failed due to a network error.");
-            });
+            })
+            .finally(() => setSubmitting(false));
     };
 
     return (
-        <div className="container mt-5" style={{ maxWidth: "400px" }}>
-            <h2 className="text-center mb-4">Sign Up</h2>
-            <form onSubmit={handleSubmit} className="p-4 border rounded bg-light shadow-sm">
-                <div className="mb-3">
-                    <label className="form-label">Username</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        minLength="3"
-                    />
-                </div>
+        <Container className="py-5">
+            <Row className="justify-content-center">
+                <Col xs={12} md={6} lg={4}>
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <Card.Title className="text-center mb-4">Sign Up</Card.Title>
 
-                <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength="6"
-                    />
-                </div>
+                            {error && <Alert variant="danger">{error}</Alert>}
+                            {success && <Alert variant="success">{success}</Alert>}
 
-                <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
+                            <Form onSubmit={handleSubmit}>
+                                <Form.Group className="mb-3" controlId="signupUsername">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                        minLength={3}
+                                        disabled={submitting}
+                                    />
+                                </Form.Group>
 
-                <div className="mb-3">
-                    <label className="form-label">Birthday</label>
-                    <input
-                        type="date"
-                        className="form-control"
-                        value={birthday}
-                        onChange={(e) => setBirthday(e.target.value)}
-                        required
-                    />
-                </div>
+                                <Form.Group className="mb-3" controlId="signupPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        minLength={6}
+                                        disabled={submitting}
+                                    />
+                                </Form.Group>
 
-                {error && <div className="alert alert-danger">{error}</div>}
-                {success && <div className="alert alert-success">{success}</div>}
+                                <Form.Group className="mb-3" controlId="signupEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        disabled={submitting}
+                                    />
+                                </Form.Group>
 
-                <button type="submit" className="btn btn-success w-100">Sign Up</button>
-            </form>
+                                <Form.Group className="mb-4" controlId="signupBirthday">
+                                    <Form.Label>Birthday</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        value={birthday}
+                                        onChange={(e) => setBirthday(e.target.value)}
+                                        required
+                                        disabled={submitting}
+                                    />
+                                </Form.Group>
 
-            <p className="text-center mt-3">
-                Already have an account? <Link to="/login">Login here</Link>
-            </p>
-        </div>
+                                <Button type="submit" variant="success" className="w-100" disabled={submitting}>
+                                    {submitting ? (
+                                        <>
+                                            <Spinner as="span" animation="border" size="sm" className="me-2" />
+                                            Signing Up...
+                                        </>
+                                    ) : (
+                                        "Sign Up"
+                                    )}
+                                </Button>
+                            </Form>
+
+                            <div className="text-center mt-3">
+                                Already have an account? <Link to="/login">Login here</Link>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

@@ -1,13 +1,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import MainView from './Components/main-view/main-view';
 import LoginView from './Components/login-view/login-view';
 import SignupView from './Components/signup-view/signup-view';
 import { ProfileView } from './Components/profile-view/profile-view';
 import MovieView from './Components/movie-view/movie-view';
-import "bootstrap/dist/css/bootstrap.min.css";
 import './index.scss';
+import NavigationBar from './Components/navigation-bar/navigation-bar';
 
 const App = () => {
     const [user, setUser] = React.useState(
@@ -15,8 +16,30 @@ const App = () => {
     );
     const [token, setToken] = React.useState(localStorage.getItem('token') || null);
 
+    console.log("App rendered. Token:", token);
+
+    const handleLogout = () => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+    };
+
+    React.useEffect(() => {
+        const onUserUpdated = (e) => {
+            const updated = e.detail;
+            if (updated) {
+                setUser(updated);
+                localStorage.setItem('user', JSON.stringify(updated));
+            }
+        };
+        window.addEventListener('userUpdated', onUserUpdated);
+        return () => window.removeEventListener('userUpdated', onUserUpdated);
+    }, []);
+
     return (
         <BrowserRouter>
+            <NavigationBar user={user} onLogout={handleLogout} />
             <Routes>
                 <Route
                     path="/login"
@@ -39,7 +62,11 @@ const App = () => {
                 />
                 <Route
                     path="/profile"
-                    element={user ? <ProfileView user={user} token={token} setUser={setUser} /> : <Navigate to="/login" />}
+                    element={
+                        user
+                            ? <ProfileView user={user} token={token} setUser={setUser} onLogout={handleLogout} />
+                            : <Navigate to="/login" />
+                    }
                 />
                 <Route
                     path="/movies/:movieId"
@@ -47,7 +74,11 @@ const App = () => {
                 />
                 <Route
                     path="/"
-                    element={user ? <MainView token={token} /> : <Navigate to="/login" />}
+                    element={
+                        user
+                            ? <MainView token={token} onLogout={handleLogout} />
+                            : <Navigate to="/login" />
+                    }
                 />
             </Routes>
         </BrowserRouter>
