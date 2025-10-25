@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
+import React, { useState, useEffect, useMemo } from "react";
+import { Container, Row, Col, Spinner, Alert, Form, InputGroup } from "react-bootstrap";
 import MovieCard from "../movie-card/movie-card";
 
 const MainView = ({ token, onLogout }) => {
@@ -8,6 +8,18 @@ const MainView = ({ token, onLogout }) => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [query, setQuery] = useState("");
+
+    const filteredMovies = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return movies;
+        return movies.filter((m) => {
+            const title = (m.Title || m.title || "").toString().toLowerCase();
+            const genre = (m.Genre?.Name || m.genre?.name || "").toString().toLowerCase();
+            const director = (m.Director?.Name || m.director?.name || "").toString().toLowerCase();
+            return title.includes(q) || genre.includes(q) || director.includes(q);
+        });
+    }, [movies, query]);
 
     useEffect(() => {
         console.log("useEffect triggered. Token:", token);
@@ -46,13 +58,33 @@ const MainView = ({ token, onLogout }) => {
                 )}
 
                 {!loading && !error && (
-                    <Row className="g-4">
-                        {movies.map((movie) => (
-                            <Col key={movie._id} xs={12} sm={6} md={4} lg={3}>
-                                <MovieCard movie={movie} />
+                    <>
+                        <Row className="mb-3">
+                            <Col xs={12} sm={8} md={6} lg={4}>
+                                <InputGroup>
+                                    <Form.Control
+                                        type="search"
+                                        placeholder="Filter by title, genre, or director"
+                                        value={query}
+                                        onChange={(e) => setQuery(e.target.value)}
+                                        aria-label="Filter movies"
+                                    />
+                                </InputGroup>
                             </Col>
-                        ))}
-                    </Row>
+                        </Row>
+
+                        <Row className="g-4">
+                            {filteredMovies.map((movie) => (
+                                <Col key={movie._id} xs={12} sm={6} md={4} lg={3}>
+                                    <MovieCard movie={movie} />
+                                </Col>
+                            ))}
+                        </Row>
+
+                        {filteredMovies.length === 0 && (
+                            <div className="text-muted mt-3">No movies match “{query}”.</div>
+                        )}
+                    </>
                 )}
             </Container>
         </>
