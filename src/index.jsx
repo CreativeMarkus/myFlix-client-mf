@@ -2,12 +2,12 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './theme.css';
 import MainView from './Components/main-view/main-view';
 import LoginView from './Components/login-view/login-view';
 import SignupView from './Components/signup-view/signup-view';
 import { ProfileView } from './Components/profile-view/profile-view';
 import MovieView from './Components/movie-view/movie-view';
-import './index.scss';
 import NavigationBar from './Components/navigation-bar/navigation-bar';
 
 const App = () => {

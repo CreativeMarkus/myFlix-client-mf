@@ -1,0 +1,11 @@
+/* src/theme.css */
+
+/* Bootstrap 5.3+ supports CSS variables, so override them here */
+:root {
+  --bs-primary: seagreen;
+  --bs-body-bg: honeydew;
+}
+
+body {
+  background-color: var(--bs-body-bg);
+}
