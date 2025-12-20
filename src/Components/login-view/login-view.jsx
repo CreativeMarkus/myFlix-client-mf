@@ -10,6 +10,9 @@ const LoginView = ({ onLoggedIn }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
       const res = await fetch(
         "https://movieapi1-40cbbcb4b0ea.herokuapp.com/login",
@@ -19,8 +22,16 @@ const LoginView = ({ onLoggedIn }) => {
           body: JSON.stringify({ Username: username, Password: password }),
         }
       );
+
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(`Server error: ${res.status} - ${errorData}`);
+      }
+
       const data = await res.json();
-      if (!res.ok || !data?.token || !data?.user) throw new Error(data?.message || "Login failed");
+      if (!data?.token || !data?.user) {
+        throw new Error(data?.message || "Invalid response from server");
+      }
 
       // Persist auth
       localStorage.setItem("user", JSON.stringify(data.user));
@@ -29,7 +40,7 @@ const LoginView = ({ onLoggedIn }) => {
       onLoggedIn(data.user, data.token);
     } catch (err) {
       console.error("Login failed:", err);
-      setError(err.message);
+      setError(err.message || "Network error - please try again");
     } finally {
       setLoading(false);
     }

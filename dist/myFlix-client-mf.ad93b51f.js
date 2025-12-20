@@ -728,6 +728,7 @@ var _reactDefault = parcelHelpers.interopDefault(_react);
 var _client = require("react-dom/client");
 var _reactRouterDom = require("react-router-dom");
 var _bootstrapMinCss = require("bootstrap/dist/css/bootstrap.min.css");
+var _themeCss = require("./theme.css");
 var _mainView = require("./Components/main-view/main-view");
 var _mainViewDefault = parcelHelpers.interopDefault(_mainView);
 var _loginView = require("./Components/login-view/login-view");
@@ -737,7 +738,6 @@ var _signupViewDefault = parcelHelpers.interopDefault(_signupView);
 var _profileView = require("./Components/profile-view/profile-view");
 var _movieView = require("./Components/movie-view/movie-view");
 var _movieViewDefault = parcelHelpers.interopDefault(_movieView);
-var _indexScss = require("./index.scss");
 var _navigationBar = require("./Components/navigation-bar/navigation-bar");
 var _navigationBarDefault = parcelHelpers.interopDefault(_navigationBar);
 var _s = $RefreshSig$();
@@ -912,7 +912,7 @@ $RefreshReg$(_c, "App");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","bootstrap/dist/css/bootstrap.min.css":"i5LP7","./Components/main-view/main-view":"g9gPf","./Components/login-view/login-view":"1tteW","./Components/signup-view/signup-view":"hSw7T","./Components/profile-view/profile-view":"84Vak","./Components/movie-view/movie-view":"eSQnf","./index.scss":"lJZlQ","./Components/navigation-bar/navigation-bar":"aFOKy","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"dVPUn":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","bootstrap/dist/css/bootstrap.min.css":"i5LP7","./theme.css":"7P7TU","./Components/main-view/main-view":"g9gPf","./Components/login-view/login-view":"1tteW","./Components/signup-view/signup-view":"hSw7T","./Components/profile-view/profile-view":"84Vak","./Components/movie-view/movie-view":"eSQnf","./Components/navigation-bar/navigation-bar":"aFOKy","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"dVPUn":[function(require,module,exports,__globalThis) {
 'use strict';
 module.exports = require("ee51401569654d91");
 
@@ -32166,7 +32166,7 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"i5LP7":[function() {},{}],"g9gPf":[function(require,module,exports,__globalThis) {
+},{}],"i5LP7":[function() {},{}],"7P7TU":[function() {},{}],"g9gPf":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$7bea = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$7bea.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
@@ -42201,6 +42201,8 @@ const LoginView = ({ onLoggedIn })=>{
     const [loading, setLoading] = (0, _react.useState)(false);
     const handleSubmit = async (e)=>{
         e.preventDefault();
+        setLoading(true);
+        setError("");
         try {
             const res = await fetch("https://movieapi1-40cbbcb4b0ea.herokuapp.com/login", {
                 method: "POST",
@@ -42213,15 +42215,19 @@ const LoginView = ({ onLoggedIn })=>{
                     Password: password
                 })
             });
+            if (!res.ok) {
+                const errorData = await res.text();
+                throw new Error(`Server error: ${res.status} - ${errorData}`);
+            }
             const data = await res.json();
-            if (!res.ok || !data?.token || !data?.user) throw new Error(data?.message || "Login failed");
+            if (!data?.token || !data?.user) throw new Error(data?.message || "Invalid response from server");
             // Persist auth
             localStorage.setItem("user", JSON.stringify(data.user));
             localStorage.setItem("token", data.token);
             onLoggedIn(data.user, data.token);
         } catch (err) {
             console.error("Login failed:", err);
-            setError(err.message);
+            setError(err.message || "Network error - please try again");
         } finally{
             setLoading(false);
         }
@@ -42237,7 +42243,7 @@ const LoginView = ({ onLoggedIn })=>{
                 children: "Login"
             }, void 0, false, {
                 fileName: "src/Components/login-view/login-view.jsx",
-                lineNumber: 40,
+                lineNumber: 51,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Form), {
@@ -42249,7 +42255,7 @@ const LoginView = ({ onLoggedIn })=>{
                         children: error
                     }, void 0, false, {
                         fileName: "src/Components/login-view/login-view.jsx",
-                        lineNumber: 46,
+                        lineNumber: 57,
                         columnNumber: 19
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Form).Group, {
@@ -42259,7 +42265,7 @@ const LoginView = ({ onLoggedIn })=>{
                                 children: "Username"
                             }, void 0, false, {
                                 fileName: "src/Components/login-view/login-view.jsx",
-                                lineNumber: 48,
+                                lineNumber: 59,
                                 columnNumber: 11
                             }, undefined),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Form).Control, {
@@ -42270,13 +42276,13 @@ const LoginView = ({ onLoggedIn })=>{
                                 autoFocus: true
                             }, void 0, false, {
                                 fileName: "src/Components/login-view/login-view.jsx",
-                                lineNumber: 49,
+                                lineNumber: 60,
                                 columnNumber: 11
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/Components/login-view/login-view.jsx",
-                        lineNumber: 47,
+                        lineNumber: 58,
                         columnNumber: 9
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Form).Group, {
@@ -42287,7 +42293,7 @@ const LoginView = ({ onLoggedIn })=>{
                                 children: "Password"
                             }, void 0, false, {
                                 fileName: "src/Components/login-view/login-view.jsx",
-                                lineNumber: 59,
+                                lineNumber: 70,
                                 columnNumber: 11
                             }, undefined),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Form).Control, {
@@ -42297,13 +42303,13 @@ const LoginView = ({ onLoggedIn })=>{
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/Components/login-view/login-view.jsx",
-                                lineNumber: 60,
+                                lineNumber: 71,
                                 columnNumber: 11
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/Components/login-view/login-view.jsx",
-                        lineNumber: 58,
+                        lineNumber: 69,
                         columnNumber: 9
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Button), {
@@ -42319,7 +42325,7 @@ const LoginView = ({ onLoggedIn })=>{
                                     "aria-hidden": "true"
                                 }, void 0, false, {
                                     fileName: "src/Components/login-view/login-view.jsx",
-                                    lineNumber: 76,
+                                    lineNumber: 87,
                                     columnNumber: 15
                                 }, undefined),
                                 "Logging in..."
@@ -42327,13 +42333,13 @@ const LoginView = ({ onLoggedIn })=>{
                         }, void 0, true) : "Login"
                     }, void 0, false, {
                         fileName: "src/Components/login-view/login-view.jsx",
-                        lineNumber: 68,
+                        lineNumber: 79,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/Components/login-view/login-view.jsx",
-                lineNumber: 42,
+                lineNumber: 53,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -42345,19 +42351,19 @@ const LoginView = ({ onLoggedIn })=>{
                         children: "Sign up here"
                     }, void 0, false, {
                         fileName: "src/Components/login-view/login-view.jsx",
-                        lineNumber: 90,
+                        lineNumber: 101,
                         columnNumber: 32
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/Components/login-view/login-view.jsx",
-                lineNumber: 89,
+                lineNumber: 100,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/Components/login-view/login-view.jsx",
-        lineNumber: 39,
+        lineNumber: 50,
         columnNumber: 5
     }, undefined);
 };
@@ -43683,7 +43689,7 @@ $RefreshReg$(_c, "MovieView");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-router-dom":"61z4w","react-bootstrap":"ctEhb","./movie-view.scss":"faqBA","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"faqBA":[function() {},{}],"lJZlQ":[function() {},{}],"aFOKy":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-router-dom":"61z4w","react-bootstrap":"ctEhb","./movie-view.scss":"faqBA","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"faqBA":[function() {},{}],"aFOKy":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$4c1b = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$4c1b.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
