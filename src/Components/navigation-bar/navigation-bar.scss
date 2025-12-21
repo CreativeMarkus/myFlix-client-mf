@@ -1,0 +1,52 @@
+/* navigation-bar.scss */
+
+.navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .navbar-brand {
+        font-weight: bold;
+        font-size: 1.25rem;
+
+        @media (max-width: 575px) {
+            font-size: 1.1rem;
+        }
+    }
+
+    .navbar-toggler {
+        border: none;
+        padding: 0.25rem 0.5rem;
+
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    }
+
+    .nav-link {
+        font-weight: 500;
+        transition: color 0.2s ease;
+
+        @media (max-width: 767px) {
+            padding: 0.75rem 1rem;
+            text-align: center;
+        }
+
+        &:hover {
+            transform: translateY(-1px);
+        }
+    }
+
+    .btn {
+        @media (max-width: 767px) {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar-collapse {
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}

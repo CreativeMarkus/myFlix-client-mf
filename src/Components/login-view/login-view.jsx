@@ -47,59 +47,67 @@ const LoginView = ({ onLoggedIn }) => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "400px" }}>
-      <h2 className="text-center mb-4">Login</h2>
+    <div className="container-fluid px-3 py-3">
+      <div className="row justify-content-center">
+        <div className="col-12 col-sm-8 col-md-6 col-lg-4">
+          <div className="text-center mb-4">
+            <h2>Login</h2>
+          </div>
 
-      <Form
-        onSubmit={handleSubmit}
-        className="p-4 border rounded bg-light shadow-sm"
-      >
-        {error && <Alert variant="danger">{error}</Alert>}
-        <Form.Group controlId="formUsername">
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            autoFocus
-          />
-        </Form.Group>
+          <Form
+            onSubmit={handleSubmit}
+            className="p-3 p-md-4 border rounded bg-light shadow-sm"
+          >
+            {error && <Alert variant="danger">{error}</Alert>}
+            <Form.Group controlId="formUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                autoFocus
+                className="form-control-lg"
+              />
+            </Form.Group>
 
-        <Form.Group controlId="formPassword" className="mt-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </Form.Group>
+            <Form.Group controlId="formPassword" className="mt-3">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="form-control-lg"
+              />
+            </Form.Group>
 
-        <Button
-          variant="primary"
-          type="submit"
-          className="mt-3"
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <span
-                className="spinner-border spinner-border-sm me-2"
-                role="status"
-                aria-hidden="true"
-              ></span>
-              Logging in...
-            </>
-          ) : (
-            "Login"
-          )}
-        </Button>
-      </Form>
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-100 mt-4 btn-lg"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
+            </Button>
+          </Form>
 
-      <p className="text-center mt-3">
-        Don't have an account? <Link to="/signup">Sign up here</Link>
-      </p>
+          <p className="text-center mt-3">
+            Don't have an account? <Link to="/signup">Sign up here</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

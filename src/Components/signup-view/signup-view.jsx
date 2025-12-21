@@ -47,11 +47,11 @@ const SignupView = () => {
     };
 
     return (
-        <Container className="py-5">
+        <Container className="py-3 px-3">
             <Row className="justify-content-center">
-                <Col xs={12} md={6} lg={4}>
+                <Col xs={12} sm={8} md={6} lg={4}>
                     <Card className="shadow-sm">
-                        <Card.Body>
+                        <Card.Body className="p-3 p-md-4">
                             <Card.Title className="text-center mb-4">Sign Up</Card.Title>
 
                             {error && <Alert variant="danger">{error}</Alert>}
@@ -67,6 +67,7 @@ const SignupView = () => {
                                         required
                                         minLength={3}
                                         disabled={submitting}
+                                        className="form-control-lg"
                                     />
                                 </Form.Group>
 
@@ -79,6 +80,7 @@ const SignupView = () => {
                                         required
                                         minLength={6}
                                         disabled={submitting}
+                                        className="form-control-lg"
                                     />
                                 </Form.Group>
 
@@ -90,6 +92,7 @@ const SignupView = () => {
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                         disabled={submitting}
+                                        className="form-control-lg"
                                     />
                                 </Form.Group>
 
@@ -101,10 +104,11 @@ const SignupView = () => {
                                         onChange={(e) => setBirthday(e.target.value)}
                                         required
                                         disabled={submitting}
+                                        className="form-control-lg"
                                     />
                                 </Form.Group>
 
-                                <Button type="submit" variant="success" className="w-100" disabled={submitting}>
+                                <Button type="submit" variant="success" className="w-100 btn-lg" disabled={submitting}>
                                     {submitting ? (
                                         <>
                                             <Spinner as="span" animation="border" size="sm" className="me-2" />

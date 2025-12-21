@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "./navigation-bar.scss";
 
 const NavigationBar = ({ user, onLogout }) => {
     return (
@@ -10,6 +11,7 @@ const NavigationBar = ({ user, onLogout }) => {
             data-bs-theme="light"
             expand="md"
             className="mb-4 w-100 py-2"
+            sticky="top"
         >
             <Navbar.Brand as={Link} to="/" className="px-3">myFlix</Navbar.Brand>
             <Navbar.Toggle aria-controls="app-navbar" />

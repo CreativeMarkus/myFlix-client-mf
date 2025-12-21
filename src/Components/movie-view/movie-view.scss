@@ -1,15 +1,32 @@
 .back-button {
-  padding: 4px 12px;
+  padding: 8px 16px;
   color: whitesmoke;
   background-color: dodgerblue;
   border: none;
   border-radius: 4px;
+  margin-bottom: 1rem;
+
+  @media (max-width: 575px) {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    width: 100%;
+  }
 }
 
 .movie-view {
   display: flex;
   align-items: flex-start;
   gap: 2rem;
+
+  @media (max-width: 991px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 575px) {
+    gap: 1rem;
+  }
 }
 
 .movie-poster {
@@ -19,5 +36,74 @@
   width: 100%;
   height: auto;
   object-fit: cover;
-  margin: 0; 
+  margin: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 991px) {
+    max-width: 250px;
+    max-height: 375px;
+  }
+
+  @media (max-width: 767px) {
+    max-width: 200px;
+    max-height: 300px;
+  }
+
+  @media (max-width: 575px) {
+    max-width: 180px;
+    max-height: 270px;
+  }
+}
+
+.movie-details {
+  flex: 1;
+  min-width: 0;
+  /* Allows text to wrap properly */
+
+  h1 {
+    margin-bottom: 1rem;
+
+    @media (max-width: 991px) {
+      text-align: center;
+    }
+
+    @media (max-width: 575px) {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+
+    @media (max-width: 575px) {
+      font-size: 0.9rem;
+    }
+  }
+
+  .movie-genre,
+  .movie-director,
+  .movie-description {
+    margin-bottom: 1rem;
+
+    @media (max-width: 575px) {
+      margin-bottom: 0.75rem;
+    }
+  }
+}
+
+.favorite-button {
+  margin-top: 1rem;
+
+  @media (max-width: 991px) {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  @media (max-width: 575px) {
+    width: 100%;
+    padding: 12px 20px;
+  }
 }

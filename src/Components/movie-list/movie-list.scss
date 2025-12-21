@@ -1,3 +1,41 @@
 .movie-list {
     margin-top: 20px;
+
+    .row {
+        margin: 0;
+
+        .col {
+            padding: 0.5rem;
+
+            @media (min-width: 768px) {
+                padding: 0.75rem;
+            }
+
+            @media (min-width: 992px) {
+                padding: 1rem;
+            }
+        }
+    }
+}
+
+/* Filter search box responsiveness */
+.filter-container {
+    margin-bottom: 2rem;
+
+    @media (max-width: 575px) {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* No movies message */
+.no-movies-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+    font-size: 1.1rem;
+
+    @media (max-width: 575px) {
+        padding: 2rem 1rem;
+        font-size: 1rem;
+    }
 }
